@@ -1,0 +1,218 @@
+[gd_scene load_steps=27 format=2]
+
+[ext_resource path="res://Assets/monochrome_tilemap_transparent.png" type="Texture" id=1]
+[ext_resource path="res://StateMachine/Jumping.gd" type="Script" id=2]
+[ext_resource path="res://StateMachine/Moving.gd" type="Script" id=3]
+[ext_resource path="res://StateMachine/StateMachine.gd" type="Script" id=4]
+[ext_resource path="res://StateMachine/Coyote.gd" type="Script" id=5]
+[ext_resource path="res://StateMachine/Idle.gd" type="Script" id=6]
+[ext_resource path="res://StateMachine/Falling.gd" type="Script" id=7]
+[ext_resource path="res://StateMachine/Moving_and_Jumping.gd" type="Script" id=8]
+[ext_resource path="res://Player/Player.gd" type="Script" id=9]
+[ext_resource path="res://StateMachine/WallJump.gd" type="Script" id=10]
+
+[sub_resource type="AtlasTexture" id=1]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 17, 221, 17, 17 )
+
+[sub_resource type="AtlasTexture" id=2]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 34, 221, 17, 17 )
+
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 51, 221, 17, 17 )
+
+[sub_resource type="AtlasTexture" id=4]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 17, 204, 17, 17 )
+
+[sub_resource type="AtlasTexture" id=5]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 34, 204, 17, 17 )
+
+[sub_resource type="AtlasTexture" id=6]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 68, 204, 17, 17 )
+
+[sub_resource type="AtlasTexture" id=7]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 17, 204, 17, 17 )
+
+[sub_resource type="AtlasTexture" id=8]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 51, 204, 17, 17 )
+
+[sub_resource type="AtlasTexture" id=9]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 85, 204, 17, 17 )
+
+[sub_resource type="SpriteFrames" id=10]
+animations = [ {
+"frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ) ],
+"loop": false,
+"name": "Falling",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 4 ) ],
+"loop": true,
+"name": "Idle",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 5 ), SubResource( 6 ) ],
+"loop": false,
+"name": "Jumping",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 7 ), SubResource( 8 ) ],
+"loop": true,
+"name": "Moving",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 9 ) ],
+"loop": true,
+"name": "WallJump",
+"speed": 5.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "Attacking",
+"speed": 5.0
+} ]
+
+[sub_resource type="CircleShape2D" id=11]
+radius = 23.3904
+
+[sub_resource type="Gradient" id=12]
+offsets = PoolRealArray( 0, 0.0296296, 1 )
+colors = PoolColorArray( 0, 0, 0, 1, 0.8, 0.8, 0.8, 1, 0.204773, 0.567873, 0.859375, 1 )
+
+[sub_resource type="GradientTexture" id=13]
+gradient = SubResource( 12 )
+
+[sub_resource type="Curve" id=14]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.405682 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=15]
+curve = SubResource( 14 )
+
+[sub_resource type="ParticlesMaterial" id=16]
+lifetime_randomness = 0.52
+emission_shape = 1
+emission_sphere_radius = 3.95
+flag_disable_z = true
+spread = 47.07
+gravity = Vector3( -100, 0, 0 )
+initial_velocity = 68.96
+initial_velocity_random = 0.56
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = 9.2
+damping = 3.45
+scale = 1.5
+scale_random = 0.6
+scale_curve = SubResource( 15 )
+color_ramp = SubResource( 13 )
+
+[node name="Player" type="KinematicBody2D"]
+position = Vector2( 200, 200 )
+script = ExtResource( 9 )
+max_jump = 1300
+max_leap = 1300
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+scale = Vector2( 3, 3 )
+frames = SubResource( 10 )
+animation = "Idle"
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -0.406097, 6.09098 )
+shape = SubResource( 11 )
+
+[node name="Floor" type="Node2D" parent="."]
+
+[node name="Left" type="RayCast2D" parent="Floor"]
+position = Vector2( -6.99095, 25.2325 )
+enabled = true
+cast_to = Vector2( 0, 5 )
+collision_mask = 30
+
+[node name="Center" type="RayCast2D" parent="Floor"]
+position = Vector2( 0.258941, 25.0624 )
+enabled = true
+cast_to = Vector2( 0, 5 )
+collision_mask = 30
+
+[node name="Right" type="RayCast2D" parent="Floor"]
+position = Vector2( 7.22141, 25.3372 )
+enabled = true
+cast_to = Vector2( 0, 5 )
+collision_mask = 2147483678
+
+[node name="Wall" type="Node2D" parent="."]
+
+[node name="Left" type="RayCast2D" parent="Wall"]
+position = Vector2( -19.3634, 0.355907 )
+enabled = true
+cast_to = Vector2( -5, 0 )
+collision_mask = 30
+collide_with_areas = true
+
+[node name="Right" type="RayCast2D" parent="Wall"]
+position = Vector2( 20.1775, -0.485443 )
+enabled = true
+cast_to = Vector2( 5, 0 )
+collision_mask = 30
+collide_with_areas = true
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 4 )
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource( 6 )
+
+[node name="Moving" type="Node" parent="StateMachine"]
+script = ExtResource( 3 )
+
+[node name="Jumping" type="Node" parent="StateMachine"]
+script = ExtResource( 2 )
+
+[node name="Moving_and_Jumping" type="Node" parent="StateMachine"]
+script = ExtResource( 8 )
+
+[node name="Falling" type="Node" parent="StateMachine"]
+script = ExtResource( 7 )
+
+[node name="Coyote" type="Node" parent="StateMachine"]
+script = ExtResource( 5 )
+
+[node name="Timer" type="Timer" parent="StateMachine/Coyote"]
+wait_time = 0.2
+one_shot = true
+
+[node name="WallJump" type="Node" parent="StateMachine"]
+script = ExtResource( 10 )
+
+[node name="Timer" type="Timer" parent="StateMachine/WallJump"]
+wait_time = 4.0
+one_shot = true
+
+[node name="Sweat" type="Particles2D" parent="StateMachine/WallJump"]
+rotation = -1.62141
+emitting = false
+explosiveness = 0.25
+randomness = 0.85
+process_material = SubResource( 16 )
+
+[connection signal="timeout" from="StateMachine/Coyote/Timer" to="StateMachine/Coyote" method="_on_Timer_timeout"]
+[connection signal="timeout" from="StateMachine/WallJump/Timer" to="StateMachine/WallJump" method="_on_Timer_timeout"]
